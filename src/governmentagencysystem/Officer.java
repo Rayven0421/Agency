@@ -10,7 +10,7 @@ public class Officer extends GovernmentEmployee {
     public void process(ServiceRequest request, String note) {
         request.updateStatus("COMPLETED");
         request.addNote("[Officer] " + note);
-        System.out.println("\n[Officer] ✅ Request " + request.getTrackingCode() + " COMPLETED.");
+        System.out.println("\n[Officer] Request " + request.getTrackingCode() + " COMPLETED.");
     }
 }
 

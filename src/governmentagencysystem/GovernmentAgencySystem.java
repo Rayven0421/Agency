@@ -28,25 +28,47 @@ public class GovernmentAgencySystem {
 
     private void registerCitizen() {
         System.out.println("\n--- Register New Citizen ---");
-        System.out.print("Enter Full Name: ");
-        String name = scanner.nextLine().trim();
 
-        System.out.print("Enter TIN Number: ");
-        String tin = scanner.nextLine().trim();
+        String name = null;
+        while (name == null) {
+            System.out.print("Enter Full Name: ");
+            String input = scanner.nextLine().trim();
+            if (input.matches("[A-Za-z\\s\\-]+")) {
+                name = input;
+            } else {
+                System.out.println("Invalid name. Only letters, spaces, and hyphens allowed.");
+            }
+        }
 
-        System.out.print("Enter ID Number: ");
-        String id = scanner.nextLine().trim();
+        String tin = null;
+        while (tin == null) {
+            System.out.print("Enter TIN Number (digits only, 9-12 chars): ");
+            String input = scanner.nextLine().trim();
+            if (input.matches("\\d{9,12}")) {
+                tin = input;
+            } else {
+                System.out.println("Invalid TIN. Must be 9-12 digits.");
+            }
+        }
 
-        for (Citizen c : citizenList) {
-            if (c.getIdNumber().equals(id)) {
-                System.out.println("\n⚠ A citizen with this ID already exists.");
-                return;
+        String id = null;
+        while (id == null) {
+            System.out.print("Enter ID Number (alphanumeric, 4-10 chars): ");
+            String input = scanner.nextLine().trim();
+            boolean exists = citizenList.stream().anyMatch(c -> c.getIdNumber().equalsIgnoreCase(input));
+            if (!input.matches("[A-Za-z0-9]{4,10}")) {
+                System.out.println("Invalid ID. Must be 4-10 alphanumeric characters.");
+            } else if (exists) {
+                System.out.println("A citizen with this ID already exists.");
+            } else {
+                id = input;
             }
         }
 
         citizenList.add(new Citizen(name, tin, id));
-        System.out.println("\n✅ Citizen registered successfully!");
+        System.out.println("\nCitizen registered successfully!");
     }
+
 
     private void viewCitizens() {
         System.out.println("\n--- Registered Citizens ---");
@@ -61,7 +83,7 @@ public class GovernmentAgencySystem {
         System.out.println("\n--- Create Service Request ---");
 
         if (citizenList.isEmpty()) {
-            System.out.println("⚠ No citizens available. Register one first.");
+            System.out.println("No citizens available. Register one first.");
             return;
         }
 
@@ -76,7 +98,7 @@ public class GovernmentAgencySystem {
             if (input >= 0 && input < citizenList.size()) {
                 index = input;
             } else {
-                System.out.println("⚠ Invalid selection. Try again.");
+                System.out.println("Invalid selection. Try again.");
             }
         }
 
@@ -107,18 +129,18 @@ public class GovernmentAgencySystem {
             try {
                 LocalDate parsedDate = LocalDate.parse(dateInput);
                 if (parsedDate.isBefore(LocalDate.now())) {
-                    System.out.println("⚠ Due date cannot be in the past. Enter today or a future date.");
+                    System.out.println("Due date cannot be in the past. Enter today or a future date.");
                 } else {
                     dueDate = parsedDate;
                 }
             } catch (Exception e) {
-                System.out.println("⚠ Invalid date format. Please enter YYYY-MM-DD.");
+                System.out.println("Invalid date format. Please enter YYYY-MM-DD.");
             }
         }
         ServiceRequest request = new ServiceRequest(citizenList.get(index), type, priority, dueDate);
         requestList.add(request);
 
-        System.out.println("\n✅ Request Created! Tracking Code: " + request.getTrackingCode());
+        System.out.println("\nRequest Created! Tracking Code: " + request.getTrackingCode());
     }
 
     private void viewRequestHistory() {
@@ -133,7 +155,7 @@ public class GovernmentAgencySystem {
             }
         }
 
-        System.out.println("⚠ Request not found.");
+        System.out.println("Request not found.");
     }
 
     private void processRequests() {
@@ -146,7 +168,7 @@ public class GovernmentAgencySystem {
         }
 
         if (actionable.isEmpty()) {
-            System.out.println("\n⚠ No actionable requests.");
+            System.out.println("\nNo actionable requests.");
             return;
         }
 
@@ -163,7 +185,7 @@ public class GovernmentAgencySystem {
             if (input >= 0 && input < actionable.size()) {
                 selection = input;
             } else {
-                System.out.println("⚠ Invalid selection. Try again.");
+                System.out.println("Invalid selection. Try again.");
             }
         }
 
@@ -178,7 +200,7 @@ public class GovernmentAgencySystem {
             System.out.print("Choose: ");
             int input = readSafeInt();
             if (input == 1 || input == 2) processor = input;
-            else System.out.println("⚠ Invalid choice. Try again.");
+            else System.out.println("Invalid choice. Try again.");
         }
 
         System.out.print("Enter note: ");
@@ -233,10 +255,10 @@ public class GovernmentAgencySystem {
                 case 4 -> viewAllRequests();
                 case 5 -> processRequests();
                 case 6 -> {
-                    System.out.println("\n✅ Thank you for using the system. Goodbye!");
+                    System.out.println("\nThank you for using the system. Goodbye!");
                     return;
                 }
-                default -> System.out.println("\n⚠ Invalid option. Please try again.");
+                default -> System.out.println("\nInvalid option. Please try again.");
             }
         }
     }
