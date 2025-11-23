@@ -1,0 +1,15 @@
+{
+    "requests": [],
+    "citizens": [
+        {
+            "fullName": "Rayven Rubia",
+            "tinNumber": "1263728136",
+            "idNumber": "721389123"
+        },
+        {
+            "fullName": "John Bernard Garcia",
+            "tinNumber": "1283721983",
+            "idNumber": "738921731"
+        }
+    ]
+}
